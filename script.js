@@ -1,22 +1,48 @@
 const gameboard = (() => {
-    const currentSetup = ["x", "x","O","x","x","O","x","x","O",];
+    const boardState = ["", "","","","","","","","",];
 
     const create = () => {
         const pieces = document.querySelectorAll(".piece");
         console.log(pieces);
 
-        let index = 0;
+        let piecesIndex = 0;
         for (let piece of pieces) {
-            piece.textContent = currentSetup[index];
-            index ++;
+            piece.textContent = boardState[piecesIndex];
+            console.log(isSpotOpen(piecesIndex));
+            piecesIndex ++;
         }
+    }
+
+    const isSpotOpen = (index) => {
+        if  (boardState[index] === "") return true;
+        else return false;
+    }
+
+    const isThereAWinner = () => {
+
+        //Check Rows 
+        const pieces = document.querySelectorAll(".piece");
+        
+
     }
     return {create};
 })();
 
+const game = () => {
+    const startGame = () => {
+        gameboard.create();
+    }
 
-const Player = (name) => {
-    return {name}
+
+    return {start};
+}
+
+const Player = (marker) => {
+
+    const playTurn = (event) => {
+        event.target.textContent = marker;
+    }
+    return {playTurn};
 }
 
 gameboard.create();
