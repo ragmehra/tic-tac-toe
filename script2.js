@@ -49,8 +49,16 @@ const game = (() => {
         if (gameboard.isSpotOpen(e)) {
             e.target.textContent = marker;
             turns++;
+            console.log(turns);
         }
-        
+        isThereAWinner();
+        checkForDraw();
+    }
+
+    const start = () => {
+        turns = 0;
+        gameboard.create();
+        setupListeners();
     }
 
     const setupListeners = () => {
@@ -60,9 +68,73 @@ const game = (() => {
         piece.addEventListener("click", playTurn);
         });
     }
-    
-    return {setupListeners};
+
+    const removeListeners = () => {
+        const pieces = document.querySelectorAll(".piece");
+        console.log(pieces);
+        pieces.forEach( (piece) => {
+        piece.removeEventListener("click", playTurn);
+        });
+    }
+
+    const checkForDraw = () => {
+        console.log(turns);
+        if (turns === 9) {
+            console.log("It's a tie!");
+            removeListeners();
+        }
+    }
+
+    const isThereAWinner = () => {
+        const pieces = document.querySelectorAll(".piece");
+
+        //Check Rows
+        if (pieces[0].textContent === pieces[1].textContent &&
+                pieces[0].textContent === pieces[2].textContent &&
+                pieces[0].textContent !== "" ||
+                pieces[3].textContent === pieces[4].textContent &&
+                pieces[3].textContent === pieces[5].textContent &&
+                pieces[3].textContent !== "" || 
+                pieces[6].textContent === pieces[7].textContent &&
+                pieces[6].textContent === pieces[8].textContent &&
+                pieces[6].textContent !== "") {
+            console.log("Game Over!");
+            removeListeners();
+            return true;
+        }
+            
+        //Check Columns
+        else if (pieces[0].textContent === pieces[3].textContent &&
+                pieces[0].textContent === pieces[6].textContent &&
+                pieces[0].textContent !== "" ||
+                pieces[1].textContent === pieces[4].textContent &&
+                pieces[1].textContent === pieces[7].textContent &&
+                pieces[1].textContent !== "" ||
+                pieces[2].textContent === pieces[5].textContent &&
+                pieces[2].textContent === pieces[8].textContent &&
+                pieces[2].textContent !== "") {
+            console.log("Game Over!");
+            removeListeners();
+            return true;
+        }
+        //Check Diagonals
+        else if (pieces[0].textContent === pieces[4].textContent &&
+                pieces[0].textContent === pieces[8].textContent && 
+                pieces[0].textContent !== ""||
+                pieces[2].textContent === pieces[4].textContent &&
+                pieces[2].textContent === pieces[6].textContent &&
+                pieces[2].textContent !== "") {
+            console.log("Game Over!");
+            removeListeners();
+            return true;
+        }
+        else {
+            console.log("Game Continues!");
+            return false;
+        }
+    }
+    return {setupListeners, start};
 })();
 
-gameboard.create();
-game.setupListeners();
+const startButton = document.querySelector("#start");
+startButton.addEventListener("click", game.start);
