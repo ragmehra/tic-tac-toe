@@ -49,16 +49,29 @@ const game = (() => {
         if (gameboard.isSpotOpen(e)) {
             e.target.textContent = marker;
             turns++;
+            updateTurnDisplay();
             console.log(turns);
         }
-        isThereAWinner();
+        isThereAWinner(marker);
         checkForDraw();
+    }
+
+    const updateTurnDisplay = () => {
+        const marker = whoseTurnIsIt();
+        const display = document.querySelector("#display");
+        display.textContent = `Player ${marker}'s Turn!`;
     }
 
     const start = () => {
         turns = 0;
         gameboard.create();
         setupListeners();
+        updateTurnDisplay();
+
+    }
+
+    const end = () => {
+        removeListeners();
     }
 
     const setupListeners = () => {
@@ -80,13 +93,16 @@ const game = (() => {
     const checkForDraw = () => {
         console.log(turns);
         if (turns === 9) {
+            const display = document.querySelector("#display");
+            display.textContent = "It's a tie!";
             console.log("It's a tie!");
-            removeListeners();
+            end();
         }
     }
 
-    const isThereAWinner = () => {
+    const isThereAWinner = (marker) => {
         const pieces = document.querySelectorAll(".piece");
+        const display = document.querySelector("#display");
 
         //Check Rows
         if (pieces[0].textContent === pieces[1].textContent &&
@@ -99,7 +115,8 @@ const game = (() => {
                 pieces[6].textContent === pieces[8].textContent &&
                 pieces[6].textContent !== "") {
             console.log("Game Over!");
-            removeListeners();
+            display.textContent = `Player ${marker} Wins!`;
+            end();
             return true;
         }
             
@@ -114,7 +131,8 @@ const game = (() => {
                 pieces[2].textContent === pieces[8].textContent &&
                 pieces[2].textContent !== "") {
             console.log("Game Over!");
-            removeListeners();
+            display.textContent = `Player ${marker} Wins!`;
+            end();
             return true;
         }
         //Check Diagonals
@@ -125,7 +143,8 @@ const game = (() => {
                 pieces[2].textContent === pieces[6].textContent &&
                 pieces[2].textContent !== "") {
             console.log("Game Over!");
-            removeListeners();
+            display.textContent = `Player ${marker} Wins!`;
+            end();
             return true;
         }
         else {
@@ -133,7 +152,7 @@ const game = (() => {
             return false;
         }
     }
-    return {setupListeners, start};
+    return {start};
 })();
 
 const startButton = document.querySelector("#start");
