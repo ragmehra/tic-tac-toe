@@ -76,7 +76,7 @@ h1:hover {
     padding: 10px;
     margin: 2px;
     width: 100%;
-    border: solid black 2px;
+    border: none;
     display: flex;
     gap: 10px;
     justify-content: center;
