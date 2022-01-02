@@ -20,10 +20,17 @@ h1 {
     text-shadow: 0px 0px 15px white;
     border-bottom: solid 2px black;
     transition: text-shadow 0.2s ease;
+    margin-bottom: 0;
 }
 
 h1:hover {
     text-shadow: 0px 0px 15px white, 5px 5px 15px white;
+}
+
+#display {
+    font-size: 30px;
+    margin: 0;
+    padding: 20px;
 }
 
 #gameboard {
@@ -67,4 +74,15 @@ h1:hover {
 
 #buttons {
     padding: 10px;
+    margin: 2px;
+    width: 100%;
+    border: solid black 2px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.button {
+    padding: 3px;
+    width: 200px;
 }

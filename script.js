@@ -39,6 +39,7 @@ const game = (() => {
     const player1 = Player("X")
     const player2 = Player("O");
     let ai = false;
+    let activeGame = false;
 
     const whoseTurnIsIt = () => {
         return turns % 2 === 0 ? player1.getMarker() : player2.getMarker();
@@ -52,10 +53,16 @@ const game = (() => {
             turns++;
             updateTurnDisplay();
             console.log("Turns: ", turns);
+
+            if (isThereAWinner(marker)) return;
+            if (checkForDraw()) return;
+
+            if (turns < 9 && ai) {
+                if (aiTurn()) {
+                    return;
+                }
+            }
         }
-        if (isThereAWinner(marker)) return;
-        checkForDraw();
-        if (ai) aiTurn();
     }
 
     const aiTurn = () => {
@@ -72,14 +79,16 @@ const game = (() => {
         else {
             aiTurn();
         }
-        isThereAWinner(marker);
+        if (isThereAWinner(marker)) return true;
         checkForDraw();
+
+        return false;
     }
 
     const aiSwitch = () => {
         const aiSwitch = document.querySelector("#aiSwitch");
         aiSwitch.addEventListener("click", () => {
-            if (turns < 9) {
+            if (turns < 9 && activeGame) {
                 if (aiSwitch.textContent === "Switch On AI") {
                     aiSwitch.textContent = "Switch Off AI";
                     ai = true;
@@ -104,11 +113,13 @@ const game = (() => {
         gameboard.create();
         setupListeners();
         updateTurnDisplay();
+        activeGame = true;
 
     }
 
     const end = () => {
         removeListeners();
+        activeGame = false;
     }
 
     const setupListeners = () => {
@@ -132,6 +143,7 @@ const game = (() => {
             display.textContent = "It's a tie!";
             console.log("It's a tie!");
             end();
+            return true;
         }
     }
 
