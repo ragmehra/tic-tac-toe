@@ -38,6 +38,7 @@ const game = (() => {
     let turns = 0;
     const player1 = Player("X")
     const player2 = Player("O");
+    let ai = false;
 
     const whoseTurnIsIt = () => {
         return turns % 2 === 0 ? player1.getMarker() : player2.getMarker();
@@ -50,10 +51,46 @@ const game = (() => {
             e.target.textContent = marker;
             turns++;
             updateTurnDisplay();
-            console.log(turns);
+            console.log("Turns: ", turns);
+        }
+        if (isThereAWinner(marker)) return;
+        checkForDraw();
+        if (ai) aiTurn();
+    }
+
+    const aiTurn = () => {
+        const pieces = document.querySelectorAll(".piece");
+        const marker = whoseTurnIsIt();
+        let randomSpot = Math.floor(Math.random() * 9);
+        console.log("Random: ", randomSpot);
+
+        if (pieces.item(randomSpot).textContent === "") {
+            pieces.item(randomSpot).textContent = marker;
+            turns++;
+            updateTurnDisplay();
+        }
+        else {
+            aiTurn();
         }
         isThereAWinner(marker);
         checkForDraw();
+    }
+
+    const aiSwitch = () => {
+        const aiSwitch = document.querySelector("#aiSwitch");
+        aiSwitch.addEventListener("click", () => {
+            if (turns < 9) {
+                if (aiSwitch.textContent === "Switch On AI") {
+                    aiSwitch.textContent = "Switch Off AI";
+                    ai = true;
+                    aiTurn();
+                }
+                else if (aiSwitch.textContent === "Switch Off AI") {
+                    aiSwitch.textContent = "Switch On AI";
+                    ai = false;
+                }
+            }
+        });
     }
 
     const updateTurnDisplay = () => {
@@ -76,7 +113,6 @@ const game = (() => {
 
     const setupListeners = () => {
         const pieces = document.querySelectorAll(".piece");
-        console.log(pieces);
         pieces.forEach( (piece) => {
         piece.addEventListener("click", playTurn);
         });
@@ -84,14 +120,13 @@ const game = (() => {
 
     const removeListeners = () => {
         const pieces = document.querySelectorAll(".piece");
-        console.log(pieces);
         pieces.forEach( (piece) => {
         piece.removeEventListener("click", playTurn);
         });
     }
 
     const checkForDraw = () => {
-        console.log(turns);
+        console.log("Turns: ",turns);
         if (turns === 9) {
             const display = document.querySelector("#display");
             display.textContent = "It's a tie!";
@@ -152,8 +187,9 @@ const game = (() => {
             return false;
         }
     }
-    return {start};
+    return {start, aiSwitch};
 })();
 
 const startButton = document.querySelector("#start");
 startButton.addEventListener("click", game.start);
+game.aiSwitch();

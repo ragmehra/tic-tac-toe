@@ -64,3 +64,7 @@ h1:hover {
 .piece:hover {
     background: radial-gradient(white, pink);
 }
+
+#buttons {
+    padding: 10px;
+}
